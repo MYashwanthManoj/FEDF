@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+<h1 class="title">Employee Performance Dashboard</h1>
+<div class="btn-group">
+<button onclick="addEmployee()"> Add Employee</button>
+<button onclick="updateScore()"> Update Score</button>
+<button onclick="downloadPDF()"> Download PDF</button>
+</div>
+<div id="app"></div>
+</div>
+<script type="module" src="app.js"></script>
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- AutoTable plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdfautotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>
