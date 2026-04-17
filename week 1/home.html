@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Attendance System</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.container {
+    width: 80%;
+    margin: 40px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+input, select {
+    padding: 10px;
+    margin: 5px;
+    width: 180px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    background: #2c6cb0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1a4f85;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #2c6cb0;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>Student Attendance System</h1>
+
+    <input type="text" id="studentId" placeholder="Student ID">
+    <input type="text" id="studentName" placeholder="Student Name">
+
+    <select id="attendance">
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+    </select>
+
+    <br>
+
+    <button onclick="addStudent()">Add</button>
+    <button onclick="updateStudent()">Update</button>
+
+    <br>
+
+    <button onclick="renderDOM()">Update Using DOM</button>
+    <button onclick="renderVDOM()">Update Using VDOM</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Attendance</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<script>
+let students = [];
+let editIndex = -1;
+
+function addStudent() {
+    const id = document.getElementById("studentId").value;
+    const name = document.getElementById("studentName").value;
+    const attendance = document.getElementById("attendance").value;
+
+    if (!id || !name) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    students.push({ id, name, attendance });
+    clearFields();
+    renderDOM();
+}
+
+function editStudent(index) {
+    const student = students[index];
+
+    document.getElementById("studentId").value = student.id;
+    document.getElementById("studentName").value = student.name;
+    document.getElementById("attendance").value = student.attendance;
+
+    editIndex = index;
+}
+
+function updateStudent() {
+    if (editIndex === -1) {
+        alert("Select a student to update");
+        return;
+    }
+
+    students[editIndex] = {
+        id: document.getElementById("studentId").value,
+        name: document.getElementById("studentName").value,
+        attendance: document.getElementById("attendance").value
+    };
+
+    editIndex = -1;
+    clearFields();
+    renderDOM();
+}
+
+function deleteStudent(index) {
+    students.splice(index, 1);
+    renderDOM();
+}
+
+function clearFields() {
+    document.getElementById("studentId").value = "";
+    document.getElementById("studentName").value = "";
+    document.getElementById("attendance").value = "Present";
+}
+
+function renderDOM() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    students.forEach((student, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${student.id}</td>
+            <td>${student.name}</td>
+            <td>${student.attendance}</td>
+            <td>
+                <button onclick="editStudent(${index})">Edit</button>
+                <button onclick="deleteStudent(${index})">Delete</button>
+            </td>
+        `;
+
+        tbody.appendChild(row);
+    });
+}
+
+function renderVDOM() {
+    const tbody = document.getElementById("tableBody");
+
+    let html = "";
+    students.forEach((student, index) => {
+        html += `
+            <tr>
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.attendance}</td>
+                <td>
+                    <button onclick="editStudent(${index})">Edit</button>
+                    <button onclick="deleteStudent(${index})">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
