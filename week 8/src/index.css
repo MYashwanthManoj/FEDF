@@ -1,0 +1,61 @@
+/* ============================================
+   SKYPULSE — GLOBAL DESIGN SYSTEM
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+
+  /* Color Palette */
+  --sky-deep:    #0a0e1a;
+  --sky-mid:     #0d1b3e;
+  --sky-blue:    #1a3a6b;
+  --accent-cyan: #00d4ff;
+  --accent-blue: #4f8ef7;
+  --accent-purple: #7c5cfc;
+  --accent-warm: #ff8c42;
+  --glass-white: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-hover:  rgba(255, 255, 255, 0.13);
+  --text-primary: #f0f6ff;
+  --text-secondary: rgba(200, 220, 255, 0.7);
+  --text-muted:   rgba(160, 190, 230, 0.5);
+
+  /* Shadows */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-glow-cyan: 0 0 40px rgba(0, 212, 255, 0.15);
+  --shadow-glow-blue: 0 0 40px rgba(79, 142, 247, 0.2);
+
+  /* Radii */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 40px;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--sky-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
