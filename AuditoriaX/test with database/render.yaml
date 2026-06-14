@@ -1,0 +1,79 @@
+# render.yaml — AuditoriaX one-click deploy config for Render.com
+# Docs: https://render.com/docs/render-yaml-spec
+#
+# HOW TO USE:
+#   1. Push this repo to GitHub
+#   2. Go to dashboard.render.com → New → Blueprint
+#   3. Connect your repo — Render reads this file and sets everything up
+#   4. Add your SECRET environment variables in the Render dashboard:
+#      → JWT_SECRET, REFRESH_TOKEN_SECRET, MONGO_URI, MASTER_ADMINS
+#      → RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET (if using payments)
+#      → EMAIL_USER, EMAIL_PASS (if using email)
+
+services:
+  - type: web
+    name: auditoriax
+    env: node
+    region: singapore          # closest to India — change to 'frankfurt' for EU
+    plan: free                 # upgrade to 'starter' ($7/mo) for always-on
+
+    # Build & start
+    buildCommand: npm install
+    startCommand: node server.js
+
+    # Health check — Render uses this to know the app is up
+    healthCheckPath: /api/health
+
+    # Auto-deploy when you push to main branch
+    autoDeploy: true
+
+    # Environment variables set here are public/non-secret defaults.
+    # SECRET values (JWT_SECRET, MONGO_URI, etc.) must be added manually
+    # in the Render dashboard under Environment → Add Environment Variable.
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 3000
+
+      # Update this AFTER your first deploy (Render gives you the URL)
+      - key: APP_URL
+        value: https://auditoriax.onrender.com
+
+      - key: ALLOWED_ORIGINS
+        value: https://auditoriax.onrender.com
+
+      - key: INSTITUTION_REGISTRATION_ENABLED
+        value: true
+
+      - key: CANCEL_CUTOFF_HOURS
+        value: 2
+
+      - key: LOG_LEVEL
+        value: info
+
+      - key: WAITLIST_NOTIFY_WINDOW_MIN
+        value: 30
+
+      # Platform fee settings
+      - key: PLATFORM_FEE_FREE
+        value: 10
+      - key: PLATFORM_FEE_BASIC
+        value: 7
+      - key: PLATFORM_FEE_PREMIUM
+        value: 5
+
+      # Plan limits
+      - key: PLAN_FREE_MAX_AUDS
+        value: 3
+      - key: PLAN_FREE_MAX_EVENTS
+        value: 10
+      - key: PLAN_BASIC_MAX_AUDS
+        value: 10
+      - key: PLAN_BASIC_MAX_EVENTS
+        value: 50
+      - key: PLAN_PREMIUM_MAX_AUDS
+        value: 999
+      - key: PLAN_PREMIUM_MAX_EVENTS
+        value: 9999

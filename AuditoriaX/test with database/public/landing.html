@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AuditoriaX — Smart Auditorium Booking for Colleges</title>
+  <meta name="description" content="AuditoriaX is the all-in-one multi-college auditorium booking platform. Real-time seats, QR tickets, Razorpay payments, waitlists, and analytics — all in one place."/>
+  <meta property="og:title" content="AuditoriaX — Smart Event Ticketing for Colleges"/>
+  <meta property="og:description" content="Real-time seat booking, QR tickets, analytics, and waitlist management for colleges and universities."/>
+  <meta property="og:type" content="website"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:   #F84464;
+      --accent2:  #FF6B8A;
+      --accent3:  #E84C88;
+      --bg:       #04050A;
+      --bg1:      #0B0D17;
+      --bg2:      #111422;
+      --bg3:      #161929;
+      --border:   #1A1F35;
+      --border2:  #222840;
+      --text:     #E8EDF8;
+      --muted:    #5A6280;
+      --muted2:   #8A93B0;
+      --green:    #22D58A;
+      --blue:     #4E9EF7;
+      --purple:   #9B6EF7;
+      --gold:     #F5C842;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ─── NAV ────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 70px;
+      background: rgba(4, 5, 10, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(4, 5, 10, 0.95);
+      border-bottom-color: var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.25rem; font-weight: 900; letter-spacing: -0.04em;
+      text-decoration: none; color: var(--text);
+      user-select: none;
+    }
+    .nav-logo .hex {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900;
+      box-shadow: 0 4px 16px rgba(248,68,100,0.4);
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+
+    .nav-link {
+      color: var(--muted2); padding: 8px 16px;
+      border-radius: 8px; font-size: 0.88rem; font-weight: 500;
+      text-decoration: none; transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+    .btn-ghost {
+      background: none; border: 1px solid var(--border2);
+      color: var(--muted2); padding: 9px 20px;
+      border-radius: 9px; font-family: inherit;
+      font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(248,68,100,0.5); color: var(--accent); background: rgba(248,68,100,0.05); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: #fff; border: none;
+      padding: 10px 24px; border-radius: 9px;
+      font-family: inherit; font-size: 0.88rem;
+      font-weight: 700; cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s;
+      box-shadow: 0 4px 24px rgba(248, 68, 100, 0.4);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(248, 68, 100, 0.55); }
+    .btn-primary:hover::after { opacity: 1; }
+
+    /* ─── CANVAS PARTICLES ─────────────────────────── */
+    #particles-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Orb glows */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(248,68,100,0.15) 0%, transparent 70%);
+      top: -150px; left: 50%; transform: translateX(-50%);
+      animation: orbFloat1 8s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(78,158,247,0.1) 0%, transparent 70%);
+      top: 30%; left: 5%;
+      animation: orbFloat2 10s ease-in-out infinite;
+    }
+    .hero-orb-3 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(155,110,247,0.1) 0%, transparent 70%);
+      top: 20%; right: 5%;
+      animation: orbFloat3 12s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(-30px); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%       { transform: translateY(-20px) rotate(5deg); }
+    }
+    @keyframes orbFloat3 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%       { transform: translateY(-25px) rotate(-5deg); }
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(248, 68, 100, 0.08);
+      border: 1px solid rgba(248, 68, 100, 0.25);
+      color: var(--accent2); padding: 7px 18px;
+      border-radius: 100px; font-size: 0.8rem;
+      font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 32px;
+      animation: fadeSlideUp 0.6s ease both;
+      backdrop-filter: blur(8px);
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      max-width: 880px;
+      animation: fadeSlideUp 0.7s 0.1s ease both;
+    }
+
+    h1 .gradient-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 40%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+      color: var(--muted2);
+      max-width: 600px;
+      margin-top: 24px;
+      line-height: 1.75;
+      animation: fadeSlideUp 0.7s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex; gap: 16px; margin-top: 44px;
+      flex-wrap: wrap; justify-content: center;
+      animation: fadeSlideUp 0.7s 0.3s ease both;
+    }
+
+    .btn-xl { padding: 16px 40px; font-size: 1rem; border-radius: 12px; }
+
+    .hero-social-proof {
+      margin-top: 28px;
+      display: flex; align-items: center; gap: 12px;
+      animation: fadeSlideUp 0.7s 0.4s ease both;
+    }
+    .avatar-stack {
+      display: flex;
+    }
+    .avatar-stack .av {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border: 2px solid var(--bg);
+      margin-left: -8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; color: #fff;
+    }
+    .avatar-stack .av:first-child { margin-left: 0; }
+    .social-proof-text {
+      font-size: 0.82rem; color: var(--muted2);
+    }
+    .social-proof-text strong { color: var(--text); }
+
+    /* ─── HERO VISUAL — TICKET ───────────────────────── */
+    .hero-visual {
+      margin-top: 72px; width: 100%;
+      display: flex; justify-content: center;
+      animation: fadeSlideUp 0.9s 0.5s ease both;
+      position: relative; z-index: 1;
+    }
+
+    .ticket-showcase {
+      position: relative;
+      display: flex; gap: 24px; align-items: flex-start;
+      flex-wrap: wrap; justify-content: center;
+    }
+
+    /* Main ticket card */
+    .ticket-card {
+      background: var(--bg1);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      overflow: hidden;
+      width: 360px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 100px rgba(0,0,0,0.8),
+        0 0 80px rgba(248,68,100,0.08);
+      transform: rotate(-1.5deg) translateY(0);
+      transition: transform 0.4s ease;
+    }
+    .ticket-card:hover { transform: rotate(0deg) translateY(-6px); }
+
+    .ticket-header {
+      background: linear-gradient(135deg, #1a0a1a, #120818);
+      padding: 20px 24px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid rgba(248,68,100,0.15);
+      position: relative; overflow: hidden;
+    }
+    .ticket-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(248,68,100,0.12), transparent 60%);
+    }
+    .ticket-event-logo {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+      position: relative; z-index: 1;
+      box-shadow: 0 4px 16px rgba(248,68,100,0.4);
+    }
+    .ticket-event-info { position: relative; z-index: 1; }
+    .ticket-event-title { font-size: 1rem; font-weight: 800; letter-spacing: -0.02em; }
+    .ticket-event-subtitle { font-size: 0.78rem; color: var(--muted2); margin-top: 2px; }
+
+    .ticket-body { padding: 20px 24px; }
+    .ticket-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+    .ticket-row:last-child { border-bottom: none; }
+    .ticket-row .label { color: var(--muted); font-weight: 500; }
+    .ticket-row .value { color: var(--text); font-weight: 700; }
+    .ticket-row .value.green { color: var(--green); }
+    .ticket-row .value.accent { color: var(--accent); }
+
+    .ticket-seat-badge {
+      background: linear-gradient(135deg, rgba(248,68,100,0.15), rgba(155,110,247,0.15));
+      border: 1px solid rgba(248,68,100,0.3);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 0.88rem; font-weight: 800;
+      color: var(--accent2);
+    }
+
+    .ticket-divider {
+      display: flex; align-items: center; gap: 0;
+      margin: 16px -24px;
+    }
+    .ticket-notch {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      flex-shrink: 0;
+    }
+    .ticket-dashes {
+      flex: 1; height: 1px;
+      background: repeating-linear-gradient(90deg, var(--border2) 0, var(--border2) 8px, transparent 8px, transparent 16px);
+    }
+
+    .ticket-footer {
+      padding: 16px 24px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ticket-id-block { }
+    .ticket-id-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .ticket-id-val { font-family: monospace; font-size: 1.05rem; color: var(--accent); font-weight: 800; letter-spacing: 0.08em; margin-top: 2px; }
+
+    .ticket-qr {
+      width: 58px; height: 58px;
+      background: #fff; border-radius: 8px;
+      padding: 5px;
+      display: grid; grid-template-columns: repeat(7,1fr); gap: 2px;
+    }
+    .qr-cell { border-radius: 1px; background: #111; }
+    .qr-cell.w { background: #fff; }
+
+    /* Floating mini card */
+    .mini-card {
+      background: var(--bg1);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 20px;
+      width: 220px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    }
+    .mini-card-1 {
+      transform: rotate(2deg) translateY(40px);
+      transition: transform 0.4s ease;
+    }
+    .mini-card-1:hover { transform: rotate(0deg) translateY(34px); }
+    .mini-card-2 {
+      transform: rotate(-1deg) translateY(80px);
+      transition: transform 0.4s ease;
+    }
+    .mini-card-2:hover { transform: rotate(0deg) translateY(74px); }
+
+    .mini-card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+
+    .seat-mini-grid {
+      display: grid; grid-template-columns: repeat(8,1fr); gap: 4px;
+      margin-bottom: 12px;
+    }
+    .sm-seat {
+      aspect-ratio: 1; border-radius: 3px;
+    }
+    .sm-seat.f { background: var(--bg2); border: 1px solid var(--border2); }
+    .sm-seat.b { background: rgba(248,68,100,0.35); }
+    .sm-seat.y { background: var(--accent); box-shadow: 0 0 8px rgba(248,68,100,0.6); animation: seatPulse 2s infinite; }
+    .sm-seat.v { background: rgba(155,110,247,0.3); }
+    @keyframes seatPulse {
+      0%,100% { box-shadow: 0 0 6px rgba(248,68,100,0.5); }
+      50%      { box-shadow: 0 0 16px rgba(248,68,100,0.9); }
+    }
+
+    .mini-stat { display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 8px; }
+    .mini-stat .mk { color: var(--muted); }
+    .mini-stat .mv { font-weight: 700; }
+
+    .notification-card {
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .notif-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .notif-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }
+    .notif-sub { font-size: 0.75rem; color: var(--muted2); }
+    .notif-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-left: auto; flex-shrink: 0; margin-top: 4px;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    /* ─── MARQUEE STRIP ──────────────────────────────── */
+    .marquee-section {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative; z-index: 1;
+      background: linear-gradient(to right, var(--bg), var(--bg1) 20%, var(--bg1) 80%, var(--bg));
+    }
+    .marquee-track {
+      display: flex; gap: 40px;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+    }
+    .marquee-item {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--muted); font-size: 0.85rem; font-weight: 600;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .marquee-item .mi-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── STATS ──────────────────────────────────────── */
+    .stats-section {
+      padding: 80px 24px;
+      position: relative; z-index: 1;
+      background: var(--bg1);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-inner {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+    }
+    .stat-item {
+      text-align: center; padding: 24px 20px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-size: 2.8rem; font-weight: 900;
+      letter-spacing: -0.05em;
+      background: linear-gradient(135deg, #fff 0%, var(--muted2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      color: var(--muted); font-size: 0.8rem;
+      font-weight: 600; margin-top: 6px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+
+    /* ─── SECTION BASE ───────────────────────────────── */
+    .section {
+      padding: 100px 24px; max-width: 1120px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.15em; margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 4vw, 3.2rem);
+      font-weight: 900; letter-spacing: -0.04em;
+      line-height: 1.1; margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--muted2); font-size: 1.05rem;
+      max-width: 520px; line-height: 1.75;
+    }
+
+    /* ─── FEATURES ───────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 60px;
+    }
+
+    .feature-card {
+      background: var(--bg1);
+      border: 1px solid var(--border2);
+      border-radius: 18px;
+      padding: 30px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative; overflow: hidden;
+      cursor: default;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(248,68,100,0.05), transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      transform: scaleX(0); transition: transform 0.35s;
+      transform-origin: left;
+    }
+    .feature-card:hover {
+      border-color: rgba(248, 68, 100, 0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(248,68,100,0.06);
+    }
+    .feature-card:hover::after { transform: scaleX(1); }
+
+    .feature-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .feature-card h3 {
+      font-size: 1.08rem; font-weight: 800;
+      margin-bottom: 10px; letter-spacing: -0.02em;
+    }
+    .feature-card p { color: var(--muted2); font-size: 0.88rem; line-height: 1.7; }
+
+    .feature-tag {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--accent); background: rgba(248,68,100,0.08);
+      border: 1px solid rgba(248,68,100,0.2);
+      border-radius: 100px; padding: 3px 10px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* ─── HOW IT WORKS ───────────────────────────────── */
+    .hiw-section {
+      padding: 100px 24px;
+      background: var(--bg1);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .hiw-inner { max-width: 1120px; margin: 0 auto; }
+
+    .steps-row {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 40px; margin-top: 60px;
+      position: relative;
+    }
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 38px; left: 17%; right: 17%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2) 20%, var(--border2) 80%, transparent);
+    }
+
+    .step { text-align: center; padding: 0 8px; }
+    .step-num {
+      width: 76px; height: 76px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--bg2), var(--bg3));
+      border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 24px;
+      position: relative; z-index: 1;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .step:hover .step-num {
+      border-color: rgba(248,68,100,0.5);
+      box-shadow: 0 8px 32px rgba(248,68,100,0.2);
+      transform: translateY(-4px);
+    }
+    .step h3 { font-size: 1.08rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .step p   { color: var(--muted2); font-size: 0.88rem; line-height: 1.65; }
+
+    /* ─── PRICING ────────────────────────────────────── */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 20px; margin-top: 60px;
+    }
+    .plan-card {
+      background: var(--bg1); border: 1px solid var(--border2);
+      border-radius: 20px; padding: 32px;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .plan-card.featured {
+      background: linear-gradient(135deg, rgba(248,68,100,0.07) 0%, rgba(155,110,247,0.07) 100%);
+      border-color: rgba(248,68,100,0.4);
+      box-shadow: 0 0 0 1px rgba(248,68,100,0.15), 0 24px 60px rgba(248,68,100,0.12);
+    }
+    .plan-card:hover:not(.featured) {
+      border-color: rgba(248,68,100,0.3);
+      transform: translateY(-4px);
+    }
+    .plan-card.featured:hover { transform: translateY(-6px); }
+
+    .plan-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: #fff; font-size: 0.7rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 100px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+
+    .plan-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .plan-price { font-size: 2.6rem; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 4px; }
+    .plan-price span { font-size: 1rem; font-weight: 500; color: var(--muted); }
+    .plan-desc { color: var(--muted2); font-size: 0.85rem; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+
+    .plan-feature {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; color: var(--muted2); margin-bottom: 12px;
+    }
+    .plan-feature .pf-dot { width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; flex-shrink: 0; }
+    .pf-yes { background: rgba(34,213,138,0.12); color: var(--green); }
+    .pf-no  { background: rgba(255,255,255,0.04); color: var(--muted); }
+
+    .plan-cta { margin-top: 28px; display: block; text-align: center; }
+
+    /* ─── TESTIMONIALS ───────────────────────────────── */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 20px; margin-top: 60px;
+    }
+    .testi-card {
+      background: var(--bg1); border: 1px solid var(--border2);
+      border-radius: 18px; padding: 28px;
+      transition: all 0.3s;
+    }
+    .testi-card:hover { border-color: rgba(248,68,100,0.2); transform: translateY(-4px); }
+
+    .testi-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .testi-quote { font-size: 0.92rem; color: var(--muted2); line-height: 1.72; margin-bottom: 20px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-av {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; color: #fff; flex-shrink: 0;
+    }
+    .testi-name { font-size: 0.88rem; font-weight: 700; }
+    .testi-role { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    /* ─── CTA SECTION ────────────────────────────────── */
+    .cta-section {
+      padding: 100px 24px;
+      position: relative; z-index: 1;
+    }
+    .cta-card {
+      max-width: 900px; margin: 0 auto;
+      background: linear-gradient(135deg, rgba(248,68,100,0.07) 0%, rgba(78,158,247,0.07) 50%, rgba(155,110,247,0.07) 100%);
+      border: 1px solid var(--border2);
+      border-radius: 28px;
+      padding: 72px 60px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(248,68,100,0.1), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-card::after {
+      content: '';
+      position: absolute; bottom: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(155,110,247,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-card h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .cta-card p {
+      color: var(--muted2); font-size: 1.05rem;
+      max-width: 480px; margin: 0 auto 36px;
+      line-height: 1.7; position: relative; z-index: 1;
+    }
+    .cta-chips {
+      display: flex; gap: 10px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 36px;
+      position: relative; z-index: 1;
+    }
+    .cta-chip {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border2);
+      border-radius: 100px; padding: 6px 16px;
+      font-size: 0.82rem; color: var(--muted2); font-weight: 500;
+    }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--bg1);
+      border-top: 1px solid var(--border);
+      padding: 60px 48px 40px;
+      position: relative; z-index: 1;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 48px;
+    }
+    .footer-brand-col { }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 12px; }
+    .footer-logo .hex { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent3)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .footer-tagline { color: var(--muted); font-size: 0.88rem; line-height: 1.6; max-width: 240px; }
+
+    .footer-col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted2); margin-bottom: 16px; }
+    .footer-col a { display: block; color: var(--muted); font-size: 0.88rem; text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text); }
+
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-copy { color: var(--muted); font-size: 0.82rem; }
+    .footer-status {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--green);
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s ease-in-out infinite; }
+
+    /* ─── ANIMATIONS ─────────────────────────────────── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-link { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+      .testimonials-grid { grid-template-columns: 1fr; max-width: 500px; margin-left: auto; margin-right: auto; }
+      .ticket-showcase { flex-direction: column; align-items: center; }
+      .mini-card-1, .mini-card-2 { transform: none !important; }
+      .steps-row { grid-template-columns: 1fr; }
+      .steps-row::before { display: none; }
+      .stats-inner { grid-template-columns: repeat(2,1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid var(--border); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .cta-card { padding: 48px 28px; }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 2.4rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      footer { padding: 48px 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particle canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ─── NAV ─────────────────────────────────────────────── -->
+  <nav id="main-nav">
+    <a href="/" class="nav-logo" id="nav-logo">
+      <div class="hex">⬡</div>
+      AuditoriaX
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link" id="nav-features-link">Features</a>
+      <a href="#pricing" class="nav-link" id="nav-pricing-link">Pricing</a>
+      <a href="#how-it-works" class="nav-link" id="nav-how-link">How it works</a>
+      <a href="/app" class="btn-ghost" id="nav-signin" style="margin-left:8px;">Sign in</a>
+      <a href="/app" class="btn-primary" id="nav-cta">Get Started →</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Now with multi-institution support
+    </div>
+
+    <h1>
+      The smarter way to<br/>
+      <span class="gradient-text">book auditoriums.</span>
+    </h1>
+
+    <p class="hero-sub">
+      AuditoriaX handles seat booking, QR tickets, Razorpay payments, real-time maps,
+      and waitlists — so your college can focus on the event, not the paperwork.
+    </p>
+
+    <div class="hero-cta">
+      <a href="/app" class="btn-primary btn-xl" id="hero-cta-main">Start for Free →</a>
+      <a href="#features" class="btn-ghost btn-xl" id="hero-cta-learn">See Features</a>
+    </div>
+
+    <div class="hero-social-proof">
+      <div class="avatar-stack">
+        <div class="av" style="background:linear-gradient(135deg,#F84464,#9B6EF7)">YK</div>
+        <div class="av" style="background:linear-gradient(135deg,#4E9EF7,#22D58A)">SR</div>
+        <div class="av" style="background:linear-gradient(135deg,#F5C842,#F84464)">AV</div>
+        <div class="av" style="background:linear-gradient(135deg,#22D58A,#4E9EF7)">MR</div>
+        <div class="av" style="background:linear-gradient(135deg,#9B6EF7,#F84464)">PK</div>
+      </div>
+      <p class="social-proof-text">Trusted by <strong>50+ colleges</strong> across India</p>
+    </div>
+
+    <!-- Hero visual -->
+    <div class="hero-visual">
+      <div class="ticket-showcase">
+        <!-- Ticket -->
+        <div class="ticket-card" id="hero-ticket">
+          <div class="ticket-header">
+            <div class="ticket-event-logo">🎭</div>
+            <div class="ticket-event-info">
+              <div class="ticket-event-title">TechFest 2026 — Keynote</div>
+              <div class="ticket-event-subtitle">KL University · Main Auditorium</div>
+            </div>
+          </div>
+          <div class="ticket-body">
+            <div class="ticket-row">
+              <span class="label">Date</span>
+              <span class="value">Saturday, 14 Jun 2026</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label">Time</span>
+              <span class="value">10:00 AM – 12:00 PM</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label">Seat</span>
+              <span class="ticket-seat-badge">G-07</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label">Status</span>
+              <span class="value green">✓ Confirmed</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label">Amount</span>
+              <span class="value accent">₹150</span>
+            </div>
+          </div>
+          <div class="ticket-divider">
+            <div class="ticket-notch"></div>
+            <div class="ticket-dashes"></div>
+            <div class="ticket-notch"></div>
+          </div>
+          <div class="ticket-footer">
+            <div class="ticket-id-block">
+              <div class="ticket-id-label">Ticket ID</div>
+              <div class="ticket-id-val">AX4F2KQ8</div>
+            </div>
+            <div class="ticket-qr" id="qr-block"></div>
+          </div>
+        </div>
+
+        <!-- Mini seat map card -->
+        <div class="mini-card mini-card-1 reveal" id="mini-seat-card">
+          <div class="mini-card-title">🪑 Live Seat Map</div>
+          <div class="seat-mini-grid" id="mini-seat-grid"></div>
+          <div class="mini-stat">
+            <span class="mk">Available</span>
+            <span class="mv" id="mini-avail">—</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mk">Booked</span>
+            <span class="mv" style="color:var(--accent)" id="mini-booked">—</span>
+          </div>
+        </div>
+
+        <!-- Notification card -->
+        <div class="mini-card mini-card-2 reveal" id="mini-notif-card">
+          <div class="mini-card-title">🔔 Notifications</div>
+          <div class="notification-card" style="margin-top:4px">
+            <div class="notif-icon" style="background:rgba(34,213,138,0.1)">✅</div>
+            <div>
+              <div class="notif-title" style="font-size:0.82rem">Booking Confirmed</div>
+              <div class="notif-sub">AX4F2KQ8 · Seat G-07</div>
+            </div>
+            <div class="notif-dot" style="background:var(--green);box-shadow:0 0 6px var(--green)"></div>
+          </div>
+          <div class="notification-card" style="margin-top:16px">
+            <div class="notif-icon" style="background:rgba(248,68,100,0.1)">🎟️</div>
+            <div>
+              <div class="notif-title" style="font-size:0.82rem">Seat Available!</div>
+              <div class="notif-sub">You're next on waitlist</div>
+            </div>
+            <div class="notif-dot" style="background:var(--accent);box-shadow:0 0 6px var(--accent)"></div>
+          </div>
+          <div class="notification-card" style="margin-top:16px">
+            <div class="notif-icon" style="background:rgba(78,158,247,0.1)">💳</div>
+            <div>
+              <div class="notif-title" style="font-size:0.82rem">Refund Processed</div>
+              <div class="notif-sub">₹150 · 2-3 business days</div>
+            </div>
+            <div class="notif-dot" style="background:var(--muted);box-shadow:none;animation:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MARQUEE ───────────────────────────────────────────── -->
+  <div class="marquee-section">
+    <div class="marquee-track" id="marquee-track">
+      <!-- items duplicated by JS for infinite loop -->
+    </div>
+  </div>
+
+  <!-- ─── STATS ─────────────────────────────────────────────── -->
+  <div class="stats-section">
+    <div class="stats-inner" id="stats-strip">
+      <div class="stat-item reveal">
+        <div class="stat-number" id="stat-colleges">0</div>
+        <div class="stat-label">Colleges</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-number" id="stat-events">0</div>
+        <div class="stat-label">Events Hosted</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-number" id="stat-seats">0</div>
+        <div class="stat-label">Seats Booked</div>
+      </div>
+      <div class="stat-item reveal" style="border-right:none">
+        <div class="stat-number" id="stat-uptime">0</div>
+        <div class="stat-label">% Uptime</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FEATURES ──────────────────────────────────────────── -->
+  <div class="section" id="features">
+    <div class="section-label">Features</div>
+    <h2>Everything you need,<br/>nothing you don't.</h2>
+    <p class="section-desc">From the first seat click to the final QR scan — AuditoriaX handles every step of college event management.</p>
+
+    <div class="features-grid">
+
+      <div class="feature-card reveal" id="feat-realtime">
+        <div class="feature-icon-wrap" style="background:rgba(78,158,247,0.1)">🪑</div>
+        <h3>Real-Time Seat Maps</h3>
+        <p>Live seat availability synced via WebSockets. See which seats are taken the instant someone books — zero page refresh.</p>
+        <span class="feature-tag">WebSockets</span>
+      </div>
+
+      <div class="feature-card reveal" id="feat-qr">
+        <div class="feature-icon-wrap" style="background:rgba(34,213,138,0.1)">📲</div>
+        <h3>QR Ticket Scanning</h3>
+        <p>Every booking generates a unique QR ticket. Gate staff validate instantly — works offline too.</p>
+        <span class="feature-tag">Instant Scan</span>
+      </div>
+
+      <div class="feature-card reveal" id="feat-payments">
+        <div class="feature-icon-wrap" style="background:rgba(248,68,100,0.1)">💳</div>
+        <h3>Razorpay Payments</h3>
+        <p>Built-in payment processing for paid events. Automatic refunds on cancellation. Revenue split per your institution's plan.</p>
+        <span class="feature-tag">Auto-Refund</span>
+      </div>
+
+      <div class="feature-card reveal" id="feat-multi">
+        <div class="feature-icon-wrap" style="background:rgba(155,110,247,0.1)">🏛️</div>
+        <h3>Multi-Institution</h3>
+        <p>Each college is fully isolated. Admins, events, bookings and revenue are tenant-scoped — zero data bleed between institutions.</p>
+        <span class="feature-tag">Multi-Tenant</span>
+      </div>
+
+      <div class="feature-card reveal" id="feat-analytics">
+        <div class="feature-icon-wrap" style="background:rgba(245,200,66,0.1)">📊</div>
+        <h3>Analytics Dashboard</h3>
+        <p>Track occupancy rates, revenue by event, booking trends and cluster-level attendance — with one-click CSV export.</p>
+        <span class="feature-tag">Chart.js</span>
+      </div>
+
+      <div class="feature-card reveal" id="feat-waitlist">
+        <div class="feature-icon-wrap" style="background:rgba(34,213,138,0.1)">🔔</div>
+        <h3>Smart Waitlist</h3>
+        <p>When an event is full, students join the queue. The moment a seat frees, the next person is notified by email and in-app — with a countdown timer.</p>
+        <span class="feature-tag">Auto-Notify</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── HOW IT WORKS ──────────────────────────────────────── -->
+  <div class="hiw-section" id="how-it-works">
+    <div class="hiw-inner">
+      <div class="section-label">How it works</div>
+      <h2>Up and running in 3 steps.</h2>
+      <p class="section-desc">No long forms, no phone calls. AuditoriaX is designed to be instant.</p>
+
+      <div class="steps-row">
+        <div class="step reveal" id="step-1">
+          <div class="step-num">🎓</div>
+          <h3>Register your institution</h3>
+          <p>Sign up in under 2 minutes. Your college gets a fully isolated admin space — auditoriums, events, members, and analytics are all yours.</p>
+        </div>
+        <div class="step reveal" id="step-2">
+          <div class="step-num">📅</div>
+          <h3>Create & publish events</h3>
+          <p>Add auditoriums, set seat capacity, configure pricing, and publish events. Students see them in real-time the moment you hit publish.</p>
+        </div>
+        <div class="step reveal" id="step-3">
+          <div class="step-num">🎟️</div>
+          <h3>Book, pay & attend</h3>
+          <p>Students pick their seat, pay if needed, and get a QR ticket by email. Gate staff scan and validate in seconds. That's it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PRICING ────────────────────────────────────────────── -->
+  <div class="section" id="pricing">
+    <div class="section-label">Pricing</div>
+    <h2>Simple, transparent pricing.</h2>
+    <p class="section-desc">Start free — upgrade only when you need more. Platform fees are automatically deducted per booking.</p>
+
+    <div class="pricing-grid">
+
+      <div class="plan-card reveal" id="plan-free">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">₹0 <span>/ month</span></div>
+        <p class="plan-desc">Perfect for small departments or trying out AuditoriaX.</p>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Up to 3 auditoriums</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> 10 events / month</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> QR tickets &amp; scanning</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Waitlist system</div>
+        <div class="plan-feature"><div class="pf-dot pf-no">–</div> Analytics dashboard</div>
+        <div class="plan-feature"><div class="pf-dot pf-no">–</div> Revenue reports</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:12px">10% platform fee per booking</div>
+        <a href="/app" class="btn-ghost plan-cta" id="plan-free-cta">Get started free</a>
+      </div>
+
+      <div class="plan-card featured reveal" id="plan-basic">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">₹999 <span>/ month</span></div>
+        <p class="plan-desc">For active departments running multiple events every month.</p>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Up to 10 auditoriums</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> 50 events / month</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> QR tickets &amp; scanning</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Waitlist system</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Analytics dashboard</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Revenue reports</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:12px">7% platform fee per booking</div>
+        <a href="/app" class="btn-primary plan-cta" id="plan-basic-cta">Get Basic →</a>
+      </div>
+
+      <div class="plan-card reveal" id="plan-premium">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">₹2,999 <span>/ month</span></div>
+        <p class="plan-desc">For large institutions with high-volume, multi-auditorium events.</p>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Unlimited auditoriums</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Unlimited events</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> QR tickets &amp; scanning</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Waitlist system</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Full analytics suite</div>
+        <div class="plan-feature"><div class="pf-dot pf-yes">✓</div> Priority support</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:12px">5% platform fee per booking</div>
+        <a href="/app" class="btn-ghost plan-cta" id="plan-premium-cta">Get Premium →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── TESTIMONIALS ──────────────────────────────────────── -->
+  <div style="background:var(--bg1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1;">
+    <div class="section" style="padding-top:80px;padding-bottom:80px;">
+      <div class="section-label">Testimonials</div>
+      <h2>Loved by college admins.</h2>
+      <p class="section-desc">Real feedback from the people running events every week.</p>
+
+      <div class="testimonials-grid">
+
+        <div class="testi-card reveal" id="testi-1">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"We used to manage seat allocation in WhatsApp groups. AuditoriaX replaced the entire chaos with a clean dashboard. Our TechFest had zero double-bookings."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:linear-gradient(135deg,#F84464,#9B6EF7)">YK</div>
+            <div>
+              <div class="testi-name">Yashwanth K.</div>
+              <div class="testi-role">Event Coordinator · KL University</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal" id="testi-2">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"The QR scanning at the gate cut our check-in time from 40 minutes to under 5. The waitlist system is a game-changer — students love the instant notification."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:linear-gradient(135deg,#4E9EF7,#22D58A)">SR</div>
+            <div>
+              <div class="testi-name">Srinivas R.</div>
+              <div class="testi-role">Student Union Head · JNTUH</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal" id="testi-3">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Revenue reporting alone saved us hours of manual work every month. Setting up our institution took less than 3 minutes. Genuinely impressive product."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:linear-gradient(135deg,#F5C842,#F84464)">AV</div>
+            <div>
+              <div class="testi-name">Ananya V.</div>
+              <div class="testi-role">Admin · Osmania University</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CTA ───────────────────────────────────────────────── -->
+  <div class="cta-section">
+    <div class="cta-card reveal" id="final-cta">
+      <div class="section-label" style="justify-content:center">Get started today</div>
+      <h2>Your college deserves<br/><span class="gradient-text">better event management.</span></h2>
+      <p>Join 50+ institutions already on AuditoriaX. Free to start — no credit card, no setup fee.</p>
+      <div class="cta-chips">
+        <span class="cta-chip">✓ Free plan available</span>
+        <span class="cta-chip">✓ Setup in 2 minutes</span>
+        <span class="cta-chip">✓ No credit card</span>
+        <span class="cta-chip">✓ Cancel anytime</span>
+      </div>
+      <div class="cta-btns">
+        <a href="/app" class="btn-primary btn-xl" id="final-cta-main">Register Your Institution →</a>
+        <a href="/app" class="btn-ghost btn-xl" id="final-cta-signin">Already have an account?</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <div class="hex">⬡</div>
+          AuditoriaX
+        </div>
+        <p class="footer-tagline">Smart multi-college auditorium booking — seats, tickets, payments, and analytics in one platform.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features" id="footer-features">Features</a>
+        <a href="#pricing" id="footer-pricing">Pricing</a>
+        <a href="#how-it-works" id="footer-how">How it works</a>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="/app" id="footer-signin">Sign in</a>
+        <a href="/app" id="footer-register">Register institution</a>
+        <a href="/api/health" id="footer-status">API Status</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#" id="footer-privacy">Privacy Policy</a>
+        <a href="#" id="footer-terms">Terms of Service</a>
+        <a href="#" id="footer-refund">Refund Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 AuditoriaX. Multi-college Event Ticketing Platform.</div>
+      <div class="footer-status">
+        <div class="status-dot"></div>
+        All systems operational
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Particles ────────────────────────────────────────────────────────────
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function rand(a, b) { return a + Math.random() * (b - a); }
+
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: rand(0, W), y: rand(0, H),
+          vx: rand(-0.2, 0.2), vy: rand(-0.3, -0.05),
+          r: rand(1, 2.5),
+          alpha: rand(0.1, 0.5),
+          color: Math.random() > 0.5
+            ? `rgba(248,68,100,${rand(0.1,0.4)})`
+            : `rgba(155,110,247,${rand(0.1,0.3)})`
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -10) { p.y = H + 10; p.x = rand(0, W); }
+          if (p.x < -10) p.x = W + 10;
+          if (p.x > W + 10) p.x = -10;
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ─── Nav scroll effect ────────────────────────────────────────────────────
+    (function() {
+      const nav = document.getElementById('main-nav');
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+    })();
+
+    // ─── Mini seat grid ───────────────────────────────────────────────────────
+    (function() {
+      const grid = document.getElementById('mini-seat-grid');
+      if (!grid) return;
+      const types = [];
+      let booked = 0, avail = 0;
+      for (let i = 0; i < 40; i++) {
+        if (i === 14) { types.push('y'); }
+        else if ([0,1,2,3].includes(i)) { types.push('v'); }
+        else if (Math.random() < 0.45) { types.push('b'); booked++; }
+        else { types.push('f'); avail++; }
+      }
+      types.forEach(t => {
+        const d = document.createElement('div');
+        d.className = `sm-seat ${t}`;
+        grid.appendChild(d);
+      });
+      const av = document.getElementById('mini-avail');
+      const bk = document.getElementById('mini-booked');
+      if (av) av.textContent = avail;
+      if (bk) bk.textContent = booked;
+    })();
+
+    // ─── QR code pattern (decorative) ────────────────────────────────────────
+    (function() {
+      const qr = document.getElementById('qr-block');
+      if (!qr) return;
+      // Simple decorative QR-like pattern
+      const p = '1110111 1010101 1110111 0000000 1101011 0010100 1011101'.split('').filter(c => c !== ' ');
+      const full = [...p, ...Array(49 - p.length).fill(0).map(() => Math.random() > 0.5 ? '1' : '0')];
+      full.forEach(c => {
+        const d = document.createElement('div');
+        d.className = 'qr-cell' + (c === '0' ? ' w' : '');
+        qr.appendChild(d);
+      });
+    })();
+
+    // ─── Marquee ──────────────────────────────────────────────────────────────
+    (function() {
+      const track = document.getElementById('marquee-track');
+      if (!track) return;
+      const items = [
+        { icon: '🪑', text: 'Real-Time Seat Maps' },
+        { icon: '📲', text: 'QR Ticket Scanning' },
+        { icon: '💳', text: 'Razorpay Payments' },
+        { icon: '🏛️', text: 'Multi-Tenant Architecture' },
+        { icon: '📊', text: 'Analytics Dashboard' },
+        { icon: '🔔', text: 'Smart Waitlist System' },
+        { icon: '🔒', text: 'JWT Auth + Refresh Tokens' },
+        { icon: '📧', text: 'Email Verification' },
+        { icon: '🔄', text: 'Auto Refunds on Cancel' },
+        { icon: '⚡', text: 'WebSocket Live Updates' },
+        { icon: '📤', text: 'CSV Export Reports' },
+        { icon: '🎓', text: 'Institution Self-Onboarding' },
+      ];
+      // Duplicate for seamless loop
+      [...items, ...items].forEach(({ icon, text }) => {
+        const d = document.createElement('div');
+        d.className = 'marquee-item';
+        d.innerHTML = `<div class="mi-icon">${icon}</div>${text}`;
+        track.appendChild(d);
+      });
+    })();
+
+    // ─── Animated counters ────────────────────────────────────────────────────
+    (function() {
+      const targets = {
+        'stat-colleges': { end: 50,   suffix: '+' },
+        'stat-events':   { end: 2400, suffix: '+' },
+        'stat-seats':    { end: 98,   suffix: 'K+' },
+        'stat-uptime':   { end: 99.9, suffix: '%', decimal: true },
+      };
+      let started = false;
+
+      function animateStat(id, { end, suffix, decimal }) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const duration = 2000;
+        const start = performance.now();
+        (function tick(now) {
+          const p = Math.min((now - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          const val = decimal ? (end * ease).toFixed(1) : Math.round(end * ease);
+          el.textContent = val + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+        })(performance.now());
+      }
+
+      const observer = new IntersectionObserver(entries => {
+        if (!started && entries.some(e => e.isIntersecting)) {
+          started = true;
+          Object.entries(targets).forEach(([id, opts]) => animateStat(id, opts));
+        }
+      }, { threshold: 0.3 });
+
+      const strip = document.getElementById('stats-strip');
+      if (strip) observer.observe(strip);
+    })();
+
+    // ─── Scroll reveal ────────────────────────────────────────────────────────
+    (function() {
+      const els = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      els.forEach(el => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

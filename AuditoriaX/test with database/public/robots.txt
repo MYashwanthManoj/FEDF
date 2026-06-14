@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /api/
+
+# Allow search engines to index the app itself
+Allow: /
+
+Sitemap: https://auditoriax.app/sitemap.xml

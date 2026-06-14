@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuditoriaX — Book. Experience. Connect.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== NOISE OVERLAY ===== -->
+<div class="noise-overlay"></div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="app">
+
+  <!-- ===== LANDING / AUTH ===== -->
+  <div id="authPage" class="page">
+    <div class="auth-layout">
+      <!-- LEFT PANEL -->
+      <div class="auth-brand">
+        <div class="brand-inner">
+          <div class="logo-mark">
+            <span class="logo-icon">⬡</span>
+            <span class="logo-text">AuditoriaX</span>
+          </div>
+          <div class="brand-tagline">
+            <h1>Your campus.<br/>Every stage.<br/><em>One app.</em></h1>
+            <p>Book seats for events across colleges. Attend symposiums, cultural fests, guest lectures, and more — with real-time seat selection.</p>
+          </div>
+          <div class="brand-features">
+            <div class="feature-chip">🎭 Live Events</div>
+            <div class="feature-chip">💺 Real-time Seats</div>
+            <div class="feature-chip">🎓 Multi-College</div>
+            <div class="feature-chip">🎟️ Instant Tickets</div>
+          </div>
+          <div class="brand-stats">
+            <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Colleges</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num">200+</span><span class="stat-label">Events/month</span></div>
+            <div class="stat-divider"></div>
+            <div class="stat"><span class="stat-num">10K+</span><span class="stat-label">Students</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-panel">
+        <div class="auth-card">
+          <!-- Tabs -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="loginTabBtn" onclick="showAuthTab('login')">Sign In</button>
+            <button class="auth-tab" id="signupTabBtn" onclick="showAuthTab('signup')">Create Account</button>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <div id="loginForm" class="auth-form active">
+            <div class="form-field">
+              <label>Email Address</label>
+              <div class="input-wrap">
+                <span class="input-icon">✉</span>
+                <input type="email" id="loginEmail" placeholder="you@college.edu" autocomplete="email" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Password</label>
+              <div class="input-wrap">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" />
+                <button class="toggle-pw" onclick="togglePw('loginPassword', this)">👁</button>
+              </div>
+            </div>
+            <button class="btn-primary full" id="loginBtn">Sign In →</button>
+
+          </div>
+
+          <!-- SIGNUP FORM -->
+          <div id="signupForm" class="auth-form">
+            <div class="form-field">
+              <label>Email Address</label>
+              <div class="input-wrap">
+                <span class="input-icon">✉</span>
+                <input type="email" id="signupEmail" placeholder="you@college.edu or you@teacher.com" oninput="onSignupEmailInput()" />
+              </div>
+              <span class="field-hint">Students: any college email · Teachers: @teacher.com · KLH students: @klh.edu.in (cluster required)</span>
+            </div>
+            <div class="form-field">
+              <label>College Name</label>
+              <div class="input-wrap">
+                <span class="input-icon">🏛</span>
+                <input type="text" id="signupCollege" placeholder="e.g. KL University" />
+              </div>
+            </div>
+            <div id="studentFields" class="student-only" style="display:none">
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Gender</label>
+                  <div class="input-wrap">
+                    <span class="input-icon">⚥</span>
+                    <select id="signupGender">
+                      <option value="">Select</option>
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label>Academic Cluster</label>
+                  <div class="input-wrap">
+                    <span class="input-icon">#</span>
+                    <select id="signupCluster">
+                      <option value="">Select</option>
+                      <option value="1">Cluster 1</option>
+                      <option value="2">Cluster 2</option>
+                      <option value="3">Cluster 3</option>
+                      <option value="4">Cluster 4</option>
+                      <option value="5">Cluster 5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Password</label>
+                <div class="input-wrap">
+                  <span class="input-icon">🔒</span>
+                  <input type="password" id="signupPassword" placeholder="Min 6 chars" />
+                </div>
+              </div>
+              <div class="form-field">
+                <label>Confirm Password</label>
+                <div class="input-wrap">
+                  <span class="input-icon">🔒</span>
+                  <input type="password" id="signupConfirm" placeholder="Repeat" />
+                </div>
+              </div>
+            </div>
+            <button class="btn-primary full" id="signupBtn">Create Account →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div id="mainApp" class="page">
+
+    <!-- TOP NAV -->
+    <nav class="topnav">
+      <div class="nav-left">
+        <div class="logo-mark small">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">AuditoriaX</span>
+        </div>
+        <div class="nav-college" id="navCollege"></div>
+      </div>
+      <div class="nav-center" id="navSearch">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="Search events, colleges, categories..." id="globalSearch" oninput="handleSearch()" />
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-user" onclick="toggleUserMenu()">
+          <div class="avatar" id="navAvatar"></div>
+          <div class="nav-user-info">
+            <span class="nav-username" id="navUsername"></span>
+            <span class="nav-role" id="navRoleBadge"></span>
+          </div>
+          <span class="nav-chevron">▾</span>
+        </div>
+        <div class="user-dropdown hidden" id="userDropdown">
+          <a onclick="switchMainTab('profile')">👤 My Profile</a>
+          <a onclick="switchMainTab('myBookings')">🎟️ My Bookings</a>
+          <a id="adminDropLink" class="hidden" onclick="switchMainTab('admin')">⚙️ Admin Panel</a>
+          <div class="dropdown-divider"></div>
+          <a onclick="handleLogout()" class="danger-link">Sign Out</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN TABS -->
+    <div class="maintabs">
+      <button class="mtab active" data-tab="explore" onclick="switchMainTab('explore')">🌐 Explore</button>
+      <button class="mtab" data-tab="myBookings" onclick="switchMainTab('myBookings')">🎟️ My Bookings</button>
+      <button class="mtab" data-tab="profile" onclick="switchMainTab('profile')">👤 Profile</button>
+      <button class="mtab hidden" data-tab="admin" id="adminTabBtn" onclick="switchMainTab('admin')">⚙️ Admin</button>
+    </div>
+
+    <!-- ====== EXPLORE TAB ====== -->
+    <div class="tab-pane active" id="explorePane">
+      <!-- HERO BANNER -->
+      <div class="hero-section">
+        <div class="hero-text">
+          <div class="hero-eyebrow">🔥 Trending This Week</div>
+          <h2 id="heroEventName">Loading events...</h2>
+          <p id="heroEventMeta"></p>
+          <div id="heroEventTags"></div>
+          <button class="btn-hero" id="heroBookBtn" onclick="handleHeroBook()">Book Seats →</button>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-seats">
+              <div class="mini-seat booked"></div><div class="mini-seat booked"></div><div class="mini-seat"></div><div class="mini-seat"></div><div class="mini-seat booked"></div>
+              <div class="mini-seat"></div><div class="mini-seat booked"></div><div class="mini-seat booked"></div><div class="mini-seat"></div><div class="mini-seat booked"></div>
+              <div class="mini-seat"></div><div class="mini-seat"></div><div class="mini-seat booked"></div><div class="mini-seat"></div><div class="mini-seat"></div>
+            </div>
+            <div class="hero-ticket-label">LIVE SEAT MAP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filter-bar">
+        <div class="filter-scroll">
+          <button class="filter-chip active" onclick="filterEvents('all', this)">All Events</button>
+          <button class="filter-chip" onclick="filterEvents('today', this)">Today</button>
+          <button class="filter-chip" onclick="filterEvents('this_week', this)">This Week</button>
+          <button class="filter-chip" onclick="filterEvents('tech', this)">🖥 Tech</button>
+          <button class="filter-chip" onclick="filterEvents('cultural', this)">🎭 Cultural</button>
+          <button class="filter-chip" onclick="filterEvents('lecture', this)">🎓 Lectures</button>
+          <button class="filter-chip" onclick="filterEvents('sports', this)">⚽ Sports</button>
+          <button class="filter-chip" onclick="filterEvents('free', this)">🆓 Free</button>
+          <button class="filter-chip" onclick="filterEvents('paid', this)">💳 Paid</button>
+          <button class="filter-chip" onclick="filterEvents('my_college', this)">🏛 My College</button>
+        </div>
+      </div>
+
+      <!-- EVENTS GRID -->
+      <div class="section-header">
+        <h3>Upcoming Events</h3>
+        <span id="eventCount" class="count-badge">0 events</span>
+      </div>
+      <div id="eventsGrid" class="events-grid"></div>
+      <div id="noEventsMsg" class="empty-state hidden">
+        <div class="empty-icon">🔭</div>
+        <h4>No events found</h4>
+        <p>Try changing your filters or check back soon.</p>
+      </div>
+    </div>
+
+    <!-- ====== MY BOOKINGS TAB ====== -->
+    <div class="tab-pane hidden" id="myBookingsPane">
+      <div class="pane-header">
+        <h2>My Bookings</h2>
+        <span class="pane-sub">All your confirmed tickets</span>
+      </div>
+      <div id="bookingsContainer" class="bookings-list"></div>
+    </div>
+
+    <!-- ====== PROFILE TAB ====== -->
+    <div class="tab-pane hidden" id="profilePane">
+      <div class="pane-header">
+        <h2>My Profile</h2>
+      </div>
+      <div class="profile-layout">
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileAvatar"></div>
+          <div id="profileName" class="profile-name"></div>
+          <div id="profileRoleTag" class="profile-role-tag"></div>
+          <div id="profileCollegeName" class="profile-college"></div>
+        </div>
+        <div class="profile-details">
+          <div class="profile-section">
+            <h4>Account Info</h4>
+            <div class="info-row"><span class="info-key">Email</span><span id="pEmail" class="info-val"></span></div>
+            <div class="info-row hidden" id="pGenderRow"><span class="info-key">Gender</span><span id="pGender" class="info-val"></span></div>
+            <div class="info-row hidden" id="pClusterRow"><span class="info-key">Cluster</span><span id="pCluster" class="info-val"></span></div>
+            <div class="info-row"><span class="info-key">College</span><span id="pCollege" class="info-val"></span></div>
+            <div class="info-row"><span class="info-key">Member since</span><span id="pSince" class="info-val"></span></div>
+          </div>
+          <div class="profile-section">
+            <h4>Security</h4>
+            <div id="changePwSection">
+              <button class="btn-secondary" onclick="toggleChangePw()">Change Password</button>
+              <div id="changePwForm" class="hidden" style="margin-top:16px">
+                <div class="form-field"><label>Current Password</label><input type="password" id="curPw" /></div>
+                <div class="form-field"><label>New Password</label><input type="password" id="newPw" /></div>
+                <div class="form-field"><label>Confirm New</label><input type="password" id="confirmPw" /></div>
+                <button class="btn-primary" onclick="handleChangePw()">Update Password</button>
+              </div>
+            </div>
+          </div>
+          <div class="profile-section" id="editStudentSection">
+            <h4>Student Info</h4>
+            <div class="form-row">
+              <div class="form-field"><label>Gender</label>
+                <select id="editGender"><option value="M">Male</option><option value="F">Female</option></select>
+              </div>
+              <div class="form-field" id="editClusterRow"><label>Cluster</label>
+                <select id="editCluster">
+                  <option value="1">Cluster 1</option><option value="2">Cluster 2</option>
+                  <option value="3">Cluster 3</option><option value="4">Cluster 4</option><option value="5">Cluster 5</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-primary" id="saveProfileBtn" onclick="saveStudentInfo()">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ADMIN TAB ====== -->
+    <div class="tab-pane hidden" id="adminPane">
+      <div class="pane-header">
+        <h2>⚙️ Admin Panel</h2>
+        <span class="pane-sub">Manage auditoriums, events, and bookings</span>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('aud')">🏛 Auditoriums</button>
+        <button class="admin-tab" onclick="switchAdminTab('events')">🎭 Events</button>
+        <button class="admin-tab" onclick="switchAdminTab('bookings')">📊 Bookings</button>
+        <button class="admin-tab" onclick="switchAdminTab('analytics')">📈 Analytics</button>
+        <button class="admin-tab" onclick="switchAdminTab('system')">🔧 System</button>
+      </div>
+
+      <!-- Auditoriums admin -->
+      <div class="admin-pane active" id="audPane">
+        <div class="admin-two-col">
+          <div class="admin-form-card">
+            <h4>Add Auditorium</h4>
+            <div class="form-field"><label>College Name</label><input type="text" id="aCollege" placeholder="e.g. KL University" /></div>
+            <div class="form-field"><label>Auditorium Name</label><input type="text" id="aName" placeholder="e.g. Main Auditorium" /></div>
+            <div class="form-row">
+              <div class="form-field"><label>Total Capacity</label><input type="number" id="aCapacity" min="50" max="1000" value="200" oninput="onAudCapacityInput()" /></div>
+              <div class="form-field"><label>Location/City</label><input type="text" id="aCity" placeholder="City" /></div>
+            </div>
+            <!-- Seat Allocation Section -->
+            <div class="form-field" style="margin-top:4px">
+              <label style="color:var(--accent);font-weight:600;letter-spacing:0.05em">💺 Seat Allocation</label>
+              <div class="form-row" style="margin-top:8px;gap:10px">
+                <div class="form-field">
+                  <label>👨‍🏫 Teacher Seats</label>
+                  <input type="number" id="aTeacherSeats" min="0" value="20" oninput="onSeatAllocInput()" />
+                </div>
+                <div class="form-field">
+                  <label>👩 Girls Seats</label>
+                  <input type="number" id="aGirlSeats" min="0" value="80" oninput="onSeatAllocInput()" />
+                </div>
+                <div class="form-field">
+                  <label>👦 Boys Seats</label>
+                  <input type="number" id="aBoySeats" min="0" value="100" oninput="onSeatAllocInput()" style="background:var(--surface2)" />
+                </div>
+              </div>
+              <!-- Live total bar -->
+              <div id="seatAllocBar" style="margin-top:10px;font-size:0.8rem;padding:8px 12px;border-radius:8px;background:var(--surface2);border:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                  <span>Total allocated: <strong id="seatAllocTotal">200</strong></span>
+                  <span>Capacity: <strong id="seatAllocCap">200</strong></span>
+                </div>
+                <div style="height:6px;border-radius:3px;background:var(--border);overflow:hidden">
+                  <div id="seatAllocFill" style="height:100%;width:100%;background:var(--green);border-radius:3px;transition:width 0.2s,background 0.2s"></div>
+                </div>
+                <div id="seatAllocMsg" style="margin-top:5px;color:var(--green)">✓ Allocation matches capacity</div>
+              </div>
+            </div>
+            <div class="form-field"><label>Facilities (comma separated)</label><input type="text" id="aFacilities" placeholder="AC, Projector, Wi-Fi" /></div>
+            <button class="btn-primary" onclick="addAuditorium()">Add Auditorium</button>
+          </div>
+          <div class="admin-list-card">
+            <h4>Existing Auditoriums</h4>
+            <div id="audListAdmin" class="admin-scroll-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events admin -->
+      <div class="admin-pane hidden" id="eventsAdminPane">
+        <div class="admin-two-col">
+          <div class="admin-form-card">
+            <h4>Create Event</h4>
+            <div class="form-field"><label>Event Title</label><input type="text" id="evtTitle" placeholder="e.g. TechFest 2025" /></div>
+            <div class="form-field"><label>Category</label>
+              <select id="evtCategory">
+                <option value="tech">🖥 Tech Symposium</option>
+                <option value="cultural">🎭 Cultural Fest</option>
+                <option value="lecture">🎓 Guest Lecture</option>
+                <option value="sports">⚽ Sports</option>
+                <option value="other">📌 Other</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Auditorium</label><select id="evtAuditorium"><option value="">Select Auditorium</option></select></div>
+            <div class="form-row">
+              <div class="form-field"><label>Date</label><input type="date" id="evtDate" /></div>
+              <div class="form-field"><label>Time</label><input type="time" id="evtTime" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Duration (hours)</label><input type="number" id="evtDuration" min="1" max="12" value="2" /></div>
+              <div class="form-field"><label>Price for External (₹)</label><input type="number" id="evtPrice" min="0" value="0" placeholder="0 = free" /></div>
+            </div>
+            <div class="form-field"><label>Banner Color</label>
+              <div class="color-picker-row">
+                <input type="color" id="evtColor" value="#6c63ff" />
+                <span>Event banner accent</span>
+              </div>
+            </div>
+            <div class="form-field"><label>Description</label><textarea id="evtDesc" rows="3" placeholder="Tell attendees what to expect..."></textarea></div>
+            <button class="btn-primary" onclick="adminSubmitEvent()">Publish Event</button>
+          </div>
+          <div class="admin-list-card">
+            <h4>All Events</h4>
+            <div id="eventsAdminList" class="admin-scroll-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings admin -->
+      <div class="admin-pane hidden" id="bookingsAdminPane">
+        <div class="admin-form-card" style="margin-bottom:16px">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="Search by email, seat, event..." id="adminSearch" oninput="adminSearchBookings()" />
+          </div>
+        </div>
+        <div id="allBookingsAdmin" class="admin-scroll-list tall"></div>
+      </div>
+
+      <!-- System admin -->
+      <div class="admin-pane hidden" id="systemAdminPane">
+        <div class="admin-form-card">
+          <h4>System Controls</h4>
+          <p style="color:#888;margin-bottom:20px">These actions are irreversible. Proceed with caution.</p>
+          <div class="danger-actions">
+            <div class="danger-item">
+              <div>
+                <strong>Clear All Bookings</strong>
+                <p>Remove all seat reservations across all auditoriums. User accounts remain.</p>
+              </div>
+              <button class="btn-danger" onclick="clearAllBookings()">Clear Bookings</button>
+            </div>
+            <div class="danger-item">
+              <div>
+                <strong>Reset System</strong>
+                <p>Wipe all data including users, events, and auditoriums. Cannot be undone.</p>
+              </div>
+              <button class="btn-danger" onclick="resetSystem()">Reset Everything</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- systemAdminPane -->
+    </div><!-- adminPane -->
+
+    <!-- ====== ANALYTICS ADMIN PANE ====== -->
+    <!-- rendered via switchAdminTab('analytics') → renderAnalytics() -->
+    <div class="admin-pane hidden" id="analyticsAdminPane" style="display:none">
+      <div class="analytics-header">
+        <h3>📈 Event Analytics &amp; Reports</h3>
+        <span class="pane-sub">Live stats from all events, auditoriums, and bookings</span>
+      </div>
+      <div class="analytics-kpi-row" id="analyticsKPIRow"></div>
+      <div class="analytics-charts-grid">
+        <div class="analytics-card">
+          <div class="analytics-card-header">Events by Category</div>
+          <canvas id="chartCategory" class="analytics-canvas"></canvas>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-header">Monthly Booking Trend</div>
+          <canvas id="chartMonthly" class="analytics-canvas"></canvas>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-header">Venue Occupancy Rate</div>
+          <canvas id="chartOccupancy" class="analytics-canvas"></canvas>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-header">Revenue by Event</div>
+          <canvas id="chartRevenue" class="analytics-canvas"></canvas>
+        </div>
+      </div>
+      <div class="analytics-charts-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="analytics-table-card">
+          <div class="analytics-card-header">Top Events by Registration</div>
+          <div id="analyticsTopEventsTable" class="analytics-table-wrap"></div>
+        </div>
+        <div class="analytics-table-card">
+          <div class="analytics-card-header">💬 Recent Feedback Reports</div>
+          <div id="analyticsFeedbackList" class="analytics-table-wrap">
+            <p style="color:var(--text-muted);font-size:0.85rem">Loading feedback...</p>
+          </div>
+        </div>
+      </div>
+    </div><!-- analyticsAdminPane -->
+
+    
+  </div><!-- end mainApp -->
+</div><!-- end app -->
+
+<!-- ===== BOOKING FLOW MODAL ===== -->
+<div id="bookingModal" class="modal hidden">
+  <div class="modal-backdrop" onclick="closeBookingModal()"></div>
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">Select Your Seat</h3>
+        <p id="modalMeta" class="modal-meta"></p>
+      </div>
+      <button class="modal-close" onclick="closeBookingModal()">✕</button>
+    </div>
+
+    <!-- STEP 1: Auditorium pick (if multiple) -->
+    <div id="modalStep1" class="modal-step">
+      <p class="step-label">Choose Auditorium</p>
+      <div id="auditoriumCards" class="aud-cards"></div>
+    </div>
+
+    <!-- STEP 2: Seat selection -->
+    <div id="modalStep2" class="modal-step hidden">
+      <div class="seat-modal-layout">
+        <div class="seat-modal-left">
+          <div class="legend-row">
+            <div class="leg"><div class="leg-swatch teacher-swatch"></div> Teachers</div>
+            <div class="leg"><div class="leg-swatch girl-swatch"></div> Girls Section</div>
+            <div class="leg"><div class="leg-swatch boy-swatch"></div> Boys Section</div>
+            <div class="leg"><div class="leg-swatch booked-swatch"></div> Booked</div>
+            <div class="leg"><div class="leg-swatch selected-swatch"></div> Your Pick</div>
+          </div>
+          <div class="stage-label">▲ STAGE</div>
+          <div id="seatMapContainer" class="seat-map-wrap"></div>
+        </div>
+        <div class="seat-modal-right">
+          <div class="booking-summary">
+            <h4>Booking Summary</h4>
+            <div class="summary-row"><span>Event</span><strong id="sumEvent"></strong></div>
+            <div class="summary-row"><span>Auditorium</span><strong id="sumAud"></strong></div>
+            <div class="summary-row"><span>Date</span><strong id="sumDate"></strong></div>
+            <div class="summary-row"><span>Time</span><strong id="sumTime"></strong></div>
+            <div class="summary-row" id="sumSeatRow" style="display:none"><span>Seat</span><strong id="sumSeat"></strong></div>
+            <div class="summary-row" id="sumPriceRow"><span>Price</span><strong id="sumPrice"></strong></div>
+            <div class="summary-section-info" id="sectionInfo"></div>
+            <button class="btn-primary full" id="confirmBtn" disabled onclick="confirmBooking()">
+              Select a seat to continue
+            </button>
+            <button class="btn-secondary full" onclick="closeBookingModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TICKET MODAL ===== -->
+<div id="ticketModal" class="modal hidden">
+  <div class="modal-backdrop" onclick="closeTicketModal()"></div>
+  <div class="ticket-panel">
+    <div class="ticket-header">
+      <div class="ticket-logo">⬡ AuditoriaX</div>
+      <button class="modal-close" onclick="closeTicketModal()">✕</button>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-success-icon">✓</div>
+      <h3>Booking Confirmed!</h3>
+      <p id="ticketSubtitle"></p>
+    </div>
+    <div class="ticket-details">
+      <div class="ticket-row"><span>Event</span><strong id="tEvent"></strong></div>
+      <div class="ticket-row"><span>Venue</span><strong id="tVenue"></strong></div>
+      <div class="ticket-row"><span>Date & Time</span><strong id="tDateTime"></strong></div>
+      <div class="ticket-row"><span>Seat Number</span><strong id="tSeat"></strong></div>
+      <div class="ticket-row"><span>Ticket ID</span><strong id="tId" class="mono"></strong></div>
+      <div class="ticket-row" id="tAmountRow"><span>Amount Paid</span><strong id="tAmount"></strong></div>
+    </div>
+    <div class="ticket-barcode">
+      <div id="barcodeLines" class="barcode-lines"></div>
+      <div id="ticketQrCode" class="mono" style="font-size:0.7rem;color:#aaa;text-align:center"></div>
+    </div>
+    <div class="ticket-actions">
+      <button class="btn-primary" onclick="closeTicketModal(); switchMainTab('myBookings')">View My Bookings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYMENT MODAL ===== -->
+<div id="paymentModal" class="modal hidden">
+  <div class="modal-backdrop" onclick="closePaymentModal()"></div>
+  <div class="payment-panel">
+    <div class="modal-header">
+      <h3>Complete Payment</h3>
+      <button class="modal-close" onclick="closePaymentModal()">✕</button>
+    </div>
+    <div class="payment-body">
+      <div class="payment-amount-box">
+        <span>Total Amount</span>
+        <strong id="payAmount">₹0</strong>
+      </div>
+      <div class="payment-methods">
+        <div class="pm-option selected" onclick="selectPM(this,'upi')">
+          <span>📱</span><span>UPI / PhonePe / GPay</span>
+        </div>
+        <div class="pm-option" onclick="selectPM(this,'card')">
+          <span>💳</span><span>Credit / Debit Card</span>
+        </div>
+        <div class="pm-option" onclick="selectPM(this,'netbank')">
+          <span>🏦</span><span>Net Banking</span>
+        </div>
+      </div>
+      <div id="upiSection" class="payment-detail-section">
+        <div class="form-field"><label>UPI ID</label><input type="text" id="upiId" placeholder="yourname@upi" /></div>
+        <p class="payment-note">You'll receive a collect request on your UPI app.</p>
+      </div>
+      <div id="cardSection" class="payment-detail-section hidden">
+        <div class="form-field"><label>Card Number</label><input type="text" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19" /></div>
+        <div class="form-row">
+          <div class="form-field"><label>Expiry</label><input type="text" id="cardExp" placeholder="MM/YY" maxlength="5" /></div>
+          <div class="form-field"><label>CVV</label><input type="password" id="cardCvv" placeholder="•••" maxlength="3" /></div>
+        </div>
+        <div class="form-field"><label>Name on Card</label><input type="text" id="cardName" placeholder="Full Name" /></div>
+      </div>
+      <div id="netbankSection" class="payment-detail-section hidden">
+        <div class="form-field"><label>Select Bank</label>
+          <select id="bankSelect">
+            <option value="">Choose Bank</option>
+            <option>SBI</option><option>HDFC Bank</option><option>ICICI Bank</option>
+            <option>Axis Bank</option><option>Kotak Bank</option><option>Yes Bank</option>
+          </select>
+        </div>
+      </div>
+      <div class="payment-security">🔒 256-bit SSL encrypted · PCI DSS compliant</div>
+      <button class="btn-primary full pay-btn" id="payNowBtn" onclick="simulatePayment()">
+        <span id="payBtnText">Pay Now</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div><script src="app.js?v=3"></script>
+</body>
+</html>

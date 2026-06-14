@@ -1,0 +1,57 @@
+# =====================================================
+# AuditoriaX — .gitignore
+# =====================================================
+
+# Environment variables — NEVER commit this file.
+# It contains API keys, JWT secrets, and personal emails.
+.env
+.env.*
+!.env.example
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime / temp
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Winston log files (FUTURE-07)
+logs/
+
+# MongoDB data directories (if running locally)
+data/
+.db/
+
+# Build / dist artifacts
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test output
+coverage/
+.nyc_output/
+
+# Temporary test scripts (keep tests/ but not scratch scripts)
+test_local.js
+test_xss.js
+test_multi_booking.js
+check-admin.js
